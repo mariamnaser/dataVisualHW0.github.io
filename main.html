@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Clock</title>
+    <!-- Link to p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <script>
+        function setup() {
+            createCanvas(800, 400);
+            angleMode(DEGREES);
+        }
+
+        function draw() {
+            background(30);
+            let hr = hour();
+
+            // AM or PM
+            let isPM = hr >= 12;
+            let displayHour = hr % 12;
+            if (displayHour === 0) displayHour = 12;
+
+            // Circle positions
+            let amX = width / 4; // Left (AM)
+            let pmX = (3 * width) / 4; // Right (PM)
+            let circleY = height / 2;
+
+            //AM Circle
+            drawClock(amX, circleY, displayHour, !isPM, "AM");
+
+            //PM Circle
+            drawClock(pmX, circleY, displayHour, isPM, "PM");
+        }
+
+        function drawClock(x, y, hr, isActive, label) {
+            // Outer and inner circle radii
+            let outerRadius = 150;
+            let innerRadius = 120;
+            let mn = minute(); // Current minute (0-59)
+            let sc = second(); // Current second (0-59)
+
+            // Base circle
+            noStroke();
+            fill(50, 50, 50);
+            ellipse(x, y, outerRadius * 2, outerRadius * 2);
+
+            if (isActive) {
+                // Hour segment
+                let hourAngle = map(hr, 0, 12, 0, 360);
+                fill(150, 150, 150);
+                arc(x, y, outerRadius * 1.5, outerRadius * 1.5, -90, -90 + hourAngle, PIE);
+
+                // Minute hand
+                let minuteAngle = map(mn, 0, 60, 0, 360);
+                stroke(255);
+                strokeWeight(5);
+                line(x, y, x + cos(minuteAngle - 90) * innerRadius, y + sin(minuteAngle - 90) * innerRadius);
+
+                // Seconds circle
+                let secondsRadius = map(sc, 0, 60, 0, innerRadius / 4);
+                fill(255, 255, 255);
+                ellipse(x, y, secondsRadius * 2, secondsRadius * 2);
+            }
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
+
